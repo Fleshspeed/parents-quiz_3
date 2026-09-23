@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Buvisini qanchalik yaxshi bilasiz?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #fdf6f0;
+    --card: #ffffff;
+    --primary: #e8a0bf;
+    --primary-dark: #d47a9e;
+    --accent: #a8d5e5;
+    --success: #7bc47f;
+    --error: #e57373;
+    --text: #4a3f35;
+    --text-light: #7a6f65;
+    --shadow: 0 10px 30px rgba(74, 63, 53, 0.12);
+    --radius: 24px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: linear-gradient(160deg, #fdf6f0 0%, #f8e8e0 40%, #e8f4f8 100%);
+    min-height: 100dvh;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    overflow-x: hidden;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+
+  /* Screens */
+  .screen {
+    display: none;
+    animation: fadeIn 0.6s ease;
+  }
+  .screen.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-40px); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Welcome */
+  .welcome-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  .welcome-emoji {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: pulse 2s infinite;
+  }
+
+  .welcome-card h1 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .welcome-card p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 20px rgba(212, 122, 158, 0.4);
+    font-family: inherit;
+  }
+
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 122, 158, 0.5);
+  }
+
+  /* Progress */
+  .progress-wrap {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .progress-text {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .progress-bar {
+    height: 10px;
+    background: #f0e6de;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 20px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 22px;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+
+  .question-card.slide-out {
+    animation: slideOut 0.35s ease forwards;
+  }
+
+  .question-card.slide-in {
+    animation: slideIn 0.4s ease forwards;
+  }
+
+  .q-number {
+    display: inline-block;
+    background: var(--accent);
+    color: #2c5a6b;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .question-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option {
+    background: #faf6f2;
+    border: 2px solid #f0e6de;
+    border-radius: 16px;
+    padding: 16px 18px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: var(--text);
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option:active:not(.disabled) {
+    transform: scale(0.98);
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: var(--primary);
+    background: #fff5f8;
+  }
+
+  .option.correct {
+    background: #e8f5e9;
+    border-color: var(--success);
+    color: #2e7d32;
+    pointer-events: none;
+  }
+
+  .option.wrong {
+    background: #ffebee;
+    border-color: var(--error);
+    color: #c62828;
+    pointer-events: none;
+  }
+
+  .option.disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .option.correct::after {
+    content: " ✓";
+    font-weight: 800;
+  }
+
+  .option.wrong::after {
+    content: " ✗";
+    font-weight: 800;
+  }
+
+  /* Results */
+  .results-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .results-emoji {
+    font-size: 72px;
+    margin-bottom: 12px;
+  }
+
+  .score {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+  }
+
+  .score span {
+    font-size: 1.4rem;
+    color: var(--text-light);
+  }
+
+  .message {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 20px 0 28px;
+    color: var(--text);
+  }
+
+  .love {
+    font-size: 1.1rem;
+    color: var(--primary-dark);
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  .restart-btn {
+    background: linear-gradient(135deg, var(--accent), #7bb8c9);
+    box-shadow: 0 6px 20px rgba(123, 184, 201, 0.4);
+  }
+
+  /* Confetti pieces */
+  .confetti {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    top: 100%;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- WELCOME -->
+    <div id="welcome" class="screen active">
+      <div class="welcome-card">
+        <div class="welcome-emoji">👵💖</div>
+        <h1>Buvisini qanchalik<br>yaxshi bilasiz?</h1>
+        <p>15 ta savol. Faqat haqiqiy bilish kerak!<br>Har bir javobni diqqat bilan tanlang 😊</p>
+        <button class="btn" onclick="startQuiz()">Boshlash ✨</button>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz" class="screen">
+      <div class="progress-wrap">
+        <div class="progress-text"><span id="currentQ">1</span> / 15</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      <div class="question-card" id="questionCard">
+        <div class="q-number" id="qNumber">Savol 1</div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options" id="options"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results" class="screen">
+      <div class="results-card">
+        <div class="results-emoji" id="resultsEmoji">🎉</div>
+        <div class="score" id="scoreText">0 <span>/ 15</span></div>
+        <div class="message" id="resultMessage"></div>
+        <div class="love">Sizni juda yaxshi ko‘raman! 💕</div>
+        <button class="btn restart-btn" onclick="restartQuiz()">Yana o‘ynash</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const questions = [
+  {
+    q: "Buvisining eng sevimli rangi qaysi?",
+    options: ["Moviy", "Qizil", "Yashil", "Sariq"],
+    correct: 2
+  },
+  {
+    q: "Buvisi qanday hayvonni eng ko‘p yaxshi ko‘radi yoki orzu qiladi?",
+    options: ["Kuchukcha", "Mushukcha", "Qush", "Dinozavr"],
+    correct: 1
+  },
+  {
+    q: "Buvisi qaysi taomni har kuni yeyishi mumkin?",
+    options: ["Osh", "Shashlik", "Mastava", "Lag‘mon"],
+    correct: 1
+  },
+  {
+    q: "Bayramda buvisi uchun eng muhim shirinlik nima?",
+    options: ["Tort", "Shokolad plitkasi", "Halva", "Pechene"],
+    correct: 1
+  },
+  {
+    q: "Buvisi eng ko‘p qaysi ichimlikni so‘raydi?",
+    options: ["Choy", "Sok", "Pepsi", "Kakao"],
+    correct: 2
+  },
+  {
+    q: "Buvisining sevimli multfilmi yoki seriali bormi?",
+    options: ["Yes, «Shrek»", "Yes, «Tom va Jerry»", "Yo‘q, yo‘q", "Yes, «Masha va Ayiq»"],
+    correct: 2
+  },
+  {
+    q: "Buvisining sevimli qahramoni yoki superqahramoni bormi?",
+    options: ["Spiderman", "Elsa", "Yo‘q, yo‘q", "Batman"],
+    correct: 2
+  },
+  {
+    q: "Buvisi eng ko‘p nima o‘ynashni yaxshi ko‘radi?",
+    options: ["Yashirinmachoq", "Lego", "Telefon o‘yinlari", "Stol o‘yinlari"],
+    correct: 2
+  },
+  {
+    q: "Buvisi qaysi faslni eng ko‘p kutadi?",
+    options: ["Qish", "Bahor", "Yoz", "Kuz"],
+    correct: 3
+  },
+  {
+    q: "Buvisi qayerda bo‘lishni eng yaxshi ko‘radi?",
+    options: ["Park", "Bog‘ (sad)", "Uy", "Zoo"],
+    correct: 1
+  },
+  {
+    q: "Buvisining eng katta orzusi nima?",
+    options: ["Katta uy", "Oilam jannatga tushsin", "Sayohat", "Yangi mashina"],
+    correct: 1
+  },
+  {
+    q: "Agar buvisi uyda yolg‘iz qolsa, nima qiladi?",
+    options: ["Televizor ko‘radi", "Dam oladi", "Pishiradi", "Telefon bilan gaplashadi"],
+    correct: 1
+  },
+  {
+    q: "Buvisi uchun eng sevimli va qimmatli sovg‘a nima?",
+    options: ["Gullar", "Oltin bezaklar", "Shirinliklar", "Kiyim"],
+    correct: 1
+  },
+  {
+    q: "Buvisi qayerda abadiy bo‘lishni xohlaydi?",
+    options: ["Uyda", "Dengiz bo‘yida", "Parkda", "Tog‘larda"],
+    correct: 2
+  },
+  {
+    q: "Buvisi qanday turmush tarzini olib boradi?",
+    options: ["Tinch va sekin", "Faol", "Uyda o‘tirib", "Faqat ish bilan"],
+    correct: 1
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('welcome').classList.remove('active');
+  document.getElementById('quiz').classList.add('active');
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[current];
+  const card = document.getElementById('questionCard');
+  
+  document.getElementById('currentQ').textContent = current + 1;
+  document.getElementById('qNumber').textContent = `Savol ${current + 1}`;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('progressFill').style.width = `${((current) / 15) * 100}%`;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  card.classList.remove('slide-out');
+  card.classList.add('slide-in');
+  setTimeout(() => card.classList.remove('slide-in'), 400);
+}
+
+function selectAnswer(index) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const options = document.querySelectorAll('.option');
+  
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === q.correct) {
+      opt.classList.add('correct');
+    } else if (i === index) {
+      opt.classList.add('wrong');
+    }
+  });
+
+  if (index === q.correct) {
+    score++;
+  }
+
+  setTimeout(() => {
+    const card = document.getElementById('questionCard');
+    card.classList.add('slide-out');
+    
+    setTimeout(() => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResults();
+      }
+    }, 350);
+  }, 1100);
+}
+
+function showResults() {
+  document.getElementById('quiz').classList.remove('active');
+  document.getElementById('results').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+
+  document.getElementById('scoreText').innerHTML = `${score} <span>/ 15</span>`;
+
+  let emoji, msg;
+  if (score >= 13) {
+    emoji = '🥰';
+    msg = 'Voy! Siz meni hammadan yaxshi bilasiz! Buvisining yuragi siz bilan to‘la!';
+  } else if (score >= 10) {
+    emoji = '😊';
+    msg = 'Juda yaxshi! Siz meni yaxshi bilasiz. Yana biroz va mukammal bo‘lasiz!';
+  } else if (score >= 7) {
+    emoji = '💛';
+    msg = 'Yomon emas! Lekin hali o‘rganadigan narsalar bor. Men sizni yaxshi ko‘raman!';
+  } else {
+    emoji = '🤗';
+    msg = 'Hali hammasi oldinda! Men bilan ko‘proq vaqt o‘tkazing — men sizga hamma narsani aytaman 💕';
+  }
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('resultMessage').textContent = msg;
+
+  // Little confetti for high scores
+  if (score >= 10) {
+    createConfetti();
+  }
+}
+
+function createConfetti() {
+  const colors = ['#e8a0bf', '#a8d5e5', '#7bc47f', '#ffd54f', '#ce93d8'];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.animation = `confetti ${2 + Math.random() * 2}s ease-out forwards`;
+    el.style.animationDelay = Math.random() * 0.8 + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+}
+
+function restartQuiz() {
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('welcome').classList.add('active');
+}
+</script>
+</body>
+</html>
